@@ -12,7 +12,7 @@ Armazem::Armazem() : idArmazem(0), numSecoes(0), secoes(nullptr) {}
 Armazem::Armazem(int id, int num) : idArmazem(id), numSecoes(num) {
     // Aloca dinamicamente um array do seu objeto Pilha<Pacote*>.
     // O construtor padrão de Pilha() será chamado para cada uma das 'numSecoes'.
-    secoes = new Pilha<Pacote*>[numSecoes];
+    secoes = new Secao[numSecoes];
 }
 
 // Implementação do Destrutor
@@ -23,14 +23,15 @@ Armazem::~Armazem() {
 }
 
 // Implementação de armazenaPacote
-void Armazem::armazenaPacote(int idSecao, Pacote* pacote) {
+void Armazem::armazenaPacote(int proxArmazem, Pacote* pacote) {
     // Validação para garantir que o índice da seção é seguro
-    if (idSecao < 0 || idSecao >= this->numSecoes) {
-        throw std::out_of_range("Erro: Indice de secao invalido.");
+    for(int i = 0; i < this->numSecoes; i++) {
+        if (this->secoes[i].conexaoArmazem == proxArmazem) {
+            // Se a seção já está conectada ao armazém de destino, armazena o pacote
+            this->secoes[i].pacotes.empilhar(pacote);
+            return;
+        }
     }
-
-    // Chama o método 'empilhar' do seu TAD Pilha
-    this->secoes[idSecao].empilhar(pacote);
 }
 
 // Implementação de retiraPacote
@@ -43,7 +44,7 @@ Pacote* Armazem::retiraPacote(int idSecao) {
     // Verifica se a seção tem pacotes antes de tentar remover
     if (!this->secaoEstaVazia(idSecao)) {
         // Chama o método 'desempilhar' do seu TAD Pilha
-        return this->secoes[idSecao].desempilhar();
+        return this->secoes[idSecao].pacotes.desempilhar();
     }
 
     // Se a seção estiver vazia, retorna um ponteiro nulo
@@ -58,5 +59,21 @@ bool Armazem::secaoEstaVazia(int idSecao) const {
     }
 
     // Chama o método 'estaVazia' do seu TAD Pilha
-    return this->secoes[idSecao].estaVazia();
+    return this->secoes[idSecao].pacotes.estaVazia();
 }
+
+ int Armazem::getnumSecoes() const {
+    return numSecoes;
+ }
+
+ Secao Armazem::getSecao(int idSecao) const {
+        if (idSecao < 0 || idSecao >= numSecoes) {
+            throw std::out_of_range("Erro: Indice de secao invalido.");
+        }
+        return secoes[idSecao]; // Retorna a seção especificada
+    }
+
+int Armazem::getIdArmazem() const {
+        return idArmazem;
+    }
+    

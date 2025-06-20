@@ -13,6 +13,7 @@ public:
     Escalonador();
     ~Escalonador();
 
+    void setTempoSimulacao(int tempo);
     void agendarEvento(Evento* evento);
     Evento* proximoEvento();
     bool temEventos() const;

@@ -21,8 +21,8 @@ public:
     Pacote(int id, int origem, int destino);
     
     // Métodos para gerenciar a rota
-    void setRota(const ListaEncadeada<int>& rotaCalculada);
-    int getProximoDestino() const;
+    void setRota(const bool** matrizAdj, int numArmazens);
+    int getProximoDestino();
     void avancarNaRota();
     bool chegouAoDestinoFinal() const;
 
@@ -32,6 +32,7 @@ public:
 
     // Getters para informações básicas
     int getId() const;
+    int getArmazemDestino() const;
 };
 
 #endif // PACOTE_HPP

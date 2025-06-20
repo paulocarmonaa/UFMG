@@ -12,6 +12,11 @@ void Escalonador::agendarEvento(Evento* evento) {
     filaEventos.inserir(evento);
 }
 
+
+void Escalonador::setTempoSimulacao(int tempo){
+    this->tempoSimulacao = tempo;
+}
+
 Evento* Escalonador::proximoEvento() {
     if (filaEventos.estaVazio()) return nullptr;
     
