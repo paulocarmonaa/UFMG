@@ -21,7 +21,7 @@ ODIR = obj
 BDIR = bin
 
 # Nome do executável final
-EXECUTABLE = tp2
+EXECUTABLE = tp2.out
 
 # --- Gerenciamento de Arquivos ---
 # Encontra automaticamente todos os arquivos .cpp na pasta src

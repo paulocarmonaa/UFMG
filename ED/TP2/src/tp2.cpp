@@ -26,14 +26,20 @@ struct config{
     Pacote** pacotes;
 };
 
-int main(){
-
+int main(int argc, char *argv[]){
+    
     config Configuracao;
     stats Estatisticas;
     Escalonador Escalonador;
 
     // Leitura do arquivo de configuração
-    std::ifstream arquivo("entrada.txt");
+    // Leitura do arquivo de configuração
+    if (argc != 2) {
+        // Lógica para tratar o erro se os arquivos não forem passados
+        return 1;
+    }
+
+    std::ifstream arquivo(argv[1]);
 
     arquivo >> Configuracao.capacidadeTransporte;
     arquivo >> Configuracao.latenciaTransporte;
