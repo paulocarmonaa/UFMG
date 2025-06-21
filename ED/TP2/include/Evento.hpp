@@ -3,7 +3,6 @@
 
 #include <iomanip>   
 #include <sstream>   
-#include <string>    
 
 struct Evento {
     //Chave de Prioridade para ordenação de eventos
