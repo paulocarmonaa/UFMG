@@ -24,7 +24,7 @@ class Armazem {
     public:
      // Construtor: Aloca o armazém com um ID e número de seções definidos
     Armazem();
-    Armazem(int idArmazem, int numSecoes);
+    Armazem(int id, int numSecoes,int numArmazens, bool** matrizdeAdjacencia);
     ~Armazem();
 
     void armazenaPacote(int idSecao, Pacote* pacote);
@@ -34,8 +34,10 @@ class Armazem {
     bool secaoEstaVazia(int idSecao) const;
 
     int getnumSecoes() const;
-    Secao getSecao(int idSecao) const;
+    // DEPOIS (corrigido)
+    Secao& getSecao(int idSecao); // Retorna uma REFERÊNCIA para a Secao
     int getIdArmazem() const;
+    int getSecaoConexao(int idSecao) const;
     
 };
 #endif // ARMAZEM_HPP

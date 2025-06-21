@@ -1,5 +1,6 @@
 // ListaEncadeada.cpp
 #include "ListaEncadeada.hpp"
+#include "Pacote.hpp"
 
 template <typename T>
 ListaEncadeada<T>::ListaEncadeada() : cabeca(nullptr), cauda(nullptr), _tamanho(0) {}
@@ -97,3 +98,4 @@ void ListaEncadeada<T>::limpar() {
 
 // Instanciações explícitas para int
 template class ListaEncadeada<int>;
+template class ListaEncadeada<Pacote*>;

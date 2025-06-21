@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdexcept> 
 #include <string>
+#include <iomanip> 
 
 #include "ListaEncadeada.hpp"
 #include "Pacote.hpp"
@@ -59,7 +60,7 @@ int main(){
                 numSecoes++;
             }
         }
-        Configuracao.armazens[i] = new Armazem(i+1, numSecoes);
+        Configuracao.armazens[i] = new Armazem(i, numSecoes, Configuracao.numArmazens, Configuracao.matrizAdjacencia);
     }
 
     
@@ -72,13 +73,14 @@ int main(){
 
         arquivo >> tempo >> lixo >> id >> lixo >> origem >> lixo >> destino;
 
-        if(i = 0){
+        if(i == 0){
             Escalonador.setTempoSimulacao(tempo);
         }
 
         Configuracao.pacotes[i] = new Pacote(i, origem, destino);
+        Configuracao.pacotes[i]->setRota(Configuracao.matrizAdjacencia, Configuracao.numArmazens);
 
-        Escalonador.agendarEvento(new Evento(1, Escalonador.getTempoAtual(), -1, -1, origem, destino));
+        Escalonador.agendarEvento(new Evento(1, tempo, i, origem , -1, -1));
     }
 
     // Criação de eventos de transporte entre armazéns
@@ -86,7 +88,7 @@ int main(){
         for(int j = 0; j < Configuracao.numArmazens; j++){
             if (Configuracao.matrizAdjacencia[i][j]) {
                 // Criação de eventos de transporte entre armazéns
-                Evento* evento = new Evento(2, Configuracao.intervaloTransporte + Escalonador.getTempoAtual(),-1,-1,i+1,j+1);
+                Evento* evento = new Evento(2, Configuracao.intervaloTransporte + Escalonador.getTempoAtual(),-1,-1,i,j);
                 Escalonador.agendarEvento(evento);
             }
         }
@@ -102,30 +104,36 @@ int main(){
         Escalonador.setTempoSimulacao(eventoAtual->tempo);
 
         switch(eventoAtual->tipoEvento){
-            case 1:
-                if(eventoAtual->idArmazemAtual == Configuracao.pacotes[eventoAtual->idPacote - 1]->getArmazemDestino()){
-                    std::cout << Escalonador.getTempoAtual() << "pacote" 
-                    << eventoAtual->idPacote << "entregue em" << eventoAtual->idArmazemAtual << std:: endl;
+            case 1: {
+
+                Pacote* pacoteAtual = Configuracao.pacotes[eventoAtual->idPacote];
+
+                if(eventoAtual->idArmazemAtual == Configuracao.pacotes[eventoAtual->idPacote]->getArmazemDestino()){
+                   
+                    std::cout << std::setw(7) << std::setfill('0') << Escalonador.getTempoAtual()
+                    << " pacote " << std::setw(3) << std::setfill('0') << eventoAtual->idPacote
+                    << " entregue em " << std::setw(3) << std::setfill('0') << pacoteAtual->getArmazemDestino() << std::endl;
 
                     Estatisticas.numPacotesEntregues++;
 
                     break;
                 }
                 
-                // Armazena o pacote no armazém atual
-               
-                int secaoDestino = Configuracao.pacotes[eventoAtual->idPacote - 1]->getProximoDestino();
-                Pacote* pacoteAtual = Configuracao.pacotes[eventoAtual->idPacote - 1];
+                // Armazena o pacote    no armazém atual
+                //int secaoDestino = pacoteAtual->getProximoDestino();
 
-                Configuracao.armazens[eventoAtual->idArmazemAtual - 1]->armazenaPacote(secaoDestino, pacoteAtual);
-                
-                std::cout << Escalonador.getTempoAtual() << "pacote"<< eventoAtual->idPacote
-                << "armazenado em" << eventoAtual->idArmazemAtual << "na secao" << secaoDestino << std::endl;
+                Configuracao.armazens[eventoAtual->idArmazemAtual]->armazenaPacote(pacoteAtual->getProximoDestino(), pacoteAtual);
 
+                std::cout << std::setw(7) << std::setfill('0') << Escalonador.getTempoAtual()
+                << " pacote " << std::setw(3) << std::setfill('0') << eventoAtual->idPacote
+                << " armazenado em " << std::setw(3) << std::setfill('0') << eventoAtual->idArmazemAtual 
+                << " na secao " << std::setw(3) << std::setfill('0') << pacoteAtual->getProximoDestino() << std::endl;
+
+                pacoteAtual->avancarNaRota();
 
                 break;
-
-            case 2:
+            }
+            case 2:{
 
                 Armazem* ArmazemAtual = Configuracao.armazens[eventoAtual->idArmazemOrigem];
                 Secao* secaoAtual;
@@ -136,10 +144,10 @@ int main(){
                         break;
                     }
                 }
-
-                if(!secaoAtual->pacotes.estaVazia() && Estatisticas.numPacotesEntregues < Configuracao.numPacotes){
-                    Escalonador.agendarEvento(new Evento(2, Escalonador.getTempoAtual() + Configuracao.latenciaTransporte, -1, -1, eventoAtual->idArmazemOrigem, eventoAtual->idArmazemDestino));
-                    break;
+                
+                //!secaoAtual->pacotes.estaVazia()
+                if(Estatisticas.numPacotesEntregues < Configuracao.numPacotes){
+                    Escalonador.agendarEvento(new Evento(2, Escalonador.getTempoAtual() + Configuracao.intervaloTransporte, -1, -1, eventoAtual->idArmazemOrigem, eventoAtual->idArmazemDestino));
                 }
                 
                 Pilha<Pacote*> pilhaAuxiliar;
@@ -149,14 +157,18 @@ int main(){
                     pilhaAuxiliar.empilhar(secaoAtual->pacotes.desempilhar());
                     Escalonador.setTempoSimulacao(Escalonador.getTempoAtual() + Configuracao.custoRemocao);
                     
-                    std::cout << Escalonador.getTempoAtual() << "pacote" << pilhaAuxiliar.verTopo()->getId() << "removido de" 
-                    << ArmazemAtual->getIdArmazem() << "na secao" << secaoAtual->conexaoArmazem << std::endl;
+                    std::cout << std::setw(7) << std::setfill('0') << Escalonador.getTempoAtual() 
+                    << " pacote " << std::setw(3) << std::setfill('0') <<pilhaAuxiliar.verTopo()->getId() 
+                    << " removido de " << std::setw(3) << std::setfill('0') << ArmazemAtual->getIdArmazem() 
+                    << " na secao " << std::setw(3) << std::setfill('0') << secaoAtual->conexaoArmazem << std::endl;
                 }
                 
                 for(int i = 0; i < Configuracao.capacidadeTransporte && !pilhaAuxiliar.estaVazia(); i++){
                    
-                    std::cout << Escalonador.getTempoAtual() << "pacote" << pilhaAuxiliar.verTopo()->getId() << "em trânsito de" 
-                    << eventoAtual->idArmazemOrigem<< "para" << eventoAtual->idArmazemDestino<< std::endl;
+                    std::cout << std::setw(7) << std::setfill('0') << Escalonador.getTempoAtual() 
+                    << " pacote " << std::setw(3) << std::setfill('0') << pilhaAuxiliar.verTopo()->getId() 
+                    << " em transito de " << std::setw(3) << std::setfill('0') << eventoAtual->idArmazemOrigem << 
+                    " para " << std::setw(3) << std::setfill('0') << eventoAtual->idArmazemDestino << std::endl;
 
                     Escalonador.agendarEvento(new Evento(1, Escalonador.getTempoAtual() + Configuracao.latenciaTransporte, pilhaAuxiliar.verTopo()->getId(), eventoAtual->idArmazemDestino, -1, -1));
                     pilhaAuxiliar.desempilhar();
@@ -165,13 +177,18 @@ int main(){
 
                 //Rearmazenamento tem que conferir a ordem
                 while(!pilhaAuxiliar.estaVazia()){
-                    // Se ainda houver pacotes na pilha auxiliar, eles serão armazenados novamente na seção do armazém de origem
+
+                    std::cout << std::setw(7) << std::setfill('0') << Escalonador.getTempoAtual() 
+                    << " pacote " << std::setw(3) << std::setfill('0') << pilhaAuxiliar.verTopo()->getId() 
+                    << " rearmazenado em " << std::setw(3) << std::setfill('0') << eventoAtual->idArmazemOrigem << 
+                    " na secao " << std::setw(3) << std::setfill('0') << secaoAtual->conexaoArmazem << std::endl;
+
                     ArmazemAtual->armazenaPacote(secaoAtual->conexaoArmazem, pilhaAuxiliar.desempilhar());
                 }
                 
         }
         
-        
+    }
 
     }
 

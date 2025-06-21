@@ -1,4 +1,5 @@
 #include "Pacote.hpp"
+#include <iostream> //tirar dps
 
 
 Pacote::Pacote() 
@@ -9,9 +10,8 @@ Pacote::Pacote(int id, int origem, int destino)
     : idPacote(id), armazemOrigem(origem), armazemDestino(destino),
       tempoTotalArmazenado(0), tempoTotalTransporte(0), rota() {}
 
-#include "Pacote.hpp" // Não se esqueça de incluir o header da própria classe
 
-void Pacote::setRota(const bool** matrizAdj, int numArmazens) {
+void Pacote::setRota(bool** matrizAdj, int numArmazens) {
     // 1. Alocação dinâmica em vez de VLA (Variable Length Array)
     //    Isso é C++ padrão, mais seguro e evita problemas de estouro de pilha.
     bool* visitado = new bool[numArmazens];
@@ -64,14 +64,8 @@ void Pacote::setRota(const bool** matrizAdj, int numArmazens) {
 }
 
 int Pacote::getProximoDestino() {
-    if (rota.tamanho() > 1) {
-        // A rota é [atual, proximo, ...]. Pegamos o segundo elemento.
-        // Isso requer um método 'obterElementoEm(int pos)' na sua ListaEncadeada.
-        // Se sua lista não tiver, uma forma é clonar e remover o primeiro.
-        // Por simplicidade, vamos supor que a rota contém apenas os passos futuros.
+    if (!rota.estaVazia()) {
         return rota.obterPrimeiro();
-        avancarNaRota();
-
     }
     return -1; // Sem próximo destino
 }
@@ -81,8 +75,13 @@ void Pacote::avancarNaRota() {
 }
 
 bool Pacote::chegouAoDestinoFinal() const {
-    // Chegou se a rota de próximos passos está vazia.
-    return rota.estaVazia();
+    std::cout << "Tamanho = " << rota.tamanho() << std::endl;
+    if(rota.tamanho() == 1){
+        return true; // Se a rota está vazia, já chegou ao destino final.
+    }
+    else {
+        return false; // Se a rota está vazia, não há mais destinos.
+    }
 }
 
 void Pacote::adicionaTempoArmazenado(double tempo) {

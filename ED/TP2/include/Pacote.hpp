@@ -8,12 +8,13 @@ private:
     int idPacote;
     int armazemOrigem;
     int armazemDestino;
-    ListaEncadeada<int> rota;
+    
 
     // Estatísticas de tempo
     int tempoTotalArmazenado;
     int tempoTotalTransporte;
 
+    ListaEncadeada<int> rota;
     //int estadoPacote;
 
 public:
@@ -21,7 +22,7 @@ public:
     Pacote(int id, int origem, int destino);
     
     // Métodos para gerenciar a rota
-    void setRota(const bool** matrizAdj, int numArmazens);
+    void setRota(bool** matrizAdj, int numArmazens);
     int getProximoDestino();
     void avancarNaRota();
     bool chegouAoDestinoFinal() const;

@@ -44,3 +44,4 @@ int Pilha<T>::tamanho() const {
 // Explicit template instantiations
 class Pacote; // Forward declaration
 template class Pilha<Pacote*>;
+// Adicione isto no final de Pilha.cpp

@@ -13,6 +13,7 @@ struct Evento {
 
     int idPacote;
     int idArmazemAtual;
+    
     int idArmazemOrigem;
     int idArmazemDestino;
 
@@ -58,4 +59,4 @@ struct Evento {
     }
 };
 
-#endif // EVENTO_HPP
+#endif// EVENTO_HPP
