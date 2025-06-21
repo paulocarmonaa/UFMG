@@ -1,62 +1,61 @@
 #ifndef EVENTO_HPP
 #define EVENTO_HPP
 
-#include <iomanip>   // Para std::setw e std::setfill
-#include <sstream>   // Para std::stringstream
-#include <string>    // Para std::string e std::stoll
+#include <iomanip>   
+#include <sstream>   
+#include <string>    
 
 struct Evento {
+    //Chave de Prioridade para ordenação de eventos
     long long chavePrioridade;
     
-    int tipoEvento;
-    int tempo;
+    //Informacoes basicas do evento
+    int tipoEvento; // 1: Evento de Pacote ; 2: Evento de Transporte
+    int tempo; 
 
-    int idPacote;
-    int idArmazemAtual;
+    //Informacoes para eventos de pacote
+    int idPacote;  
+    int idArmazemAtual; //ID do Armazém onde esse pacote está chegando
     
-    int idArmazemOrigem;
-    int idArmazemDestino;
+    //Informacoes para eventos de transporte
+    int idArmazemOrigem; 
+    int idArmazemDestino; 
 
     // Construtor padrão
     Evento() : chavePrioridade(0), tipoEvento(0), tempo(0), idPacote(-1), 
-               idArmazemAtual(-1), idArmazemOrigem(-1), idArmazemDestino(-1) {}
+               idArmazemAtual(-1), idArmazemOrigem(-1), idArmazemDestino(-1) {} 
 
-    // Construtor principal CORRIGIDO E SIMPLIFICADO
-    Evento(int tipo, int t, int pac_id, int arm_atual, int arm_org, int arm_dst)
-        // 1. Inicializa TODOS os membros com os valores recebidos (boa prática)
-        : tipoEvento(tipo),
-          tempo(t),
-          idPacote(pac_id),
-          idArmazemAtual(arm_atual),
-          idArmazemOrigem(arm_org),
-          idArmazemDestino(arm_dst) 
+    // Construtor com parãmetros 
+    Evento(int tipoEvento, int tempo, int idPac, int armAtual, int armOrg, int armDst)
+        : tipoEvento(tipoEvento),
+          tempo(tempo),
+          idPacote(idPac),
+          idArmazemAtual(armAtual),
+          idArmazemOrigem(armOrg),
+          idArmazemDestino(armDst) 
     {
-        // 2. Usa UM ÚNICO stringstream para construir a chave de forma limpa
         std::stringstream ss;
-
-        // Parte 1: Adiciona o TEMPO (6 dígitos)
+        
+        //Montagem da chave da prioridade a partir das informações de entrada
         ss << std::setw(6) << std::setfill('0') << this->tempo;
 
-        // Parte 2: Adiciona os DADOS do evento (6 dígitos)
-        if (this->tipoEvento == 1) { // Chegada de Pacote
+        if (this->tipoEvento == 1) {
             ss << std::setw(6) << std::setfill('0') << this->idPacote;
-        } 
-        else if (this->tipoEvento == 2) { // Evento de Transporte
+        }
+        else if (this->tipoEvento == 2) { 
             ss << std::setw(3) << std::setfill('0') << this->idArmazemOrigem;
             ss << std::setw(3) << std::setfill('0') << this->idArmazemDestino;
         }
 
-        // Parte 3: Adiciona o TIPO do evento (1 dígito)
         ss << this->tipoEvento;
 
-        // 3. Converte a string final para long long e armazena na chave
         this->chavePrioridade = std::stoll(ss.str());
     }
 
-    // Operador de comparação continua correto
+    //Compara dois eventos com base na chave de prioridade
     bool operator<(const Evento& outro) const {
         return this->chavePrioridade < outro.chavePrioridade;
     }
 };
 
-#endif// EVENTO_HPP
+#endif
