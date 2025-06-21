@@ -6,12 +6,14 @@
 #include "Escalonador.hpp" 
 #include "ListaEncadeada.hpp" 
 
+//Estrutura para armazenar as seções do armazém
 struct Secao{
-    int conexaoArmazem; // ID do armazém conectado
-    Pilha <Pacote*> pacotes; // Pilha de pacotes nesta seção
+    int conexaoArmazem; 
+    Pilha <Pacote*> pacotes; 
 
-    Secao() : conexaoArmazem(-1) {} // Construtor padrão, sem conexão definida
-    Secao(int conexaoArmazem) : conexaoArmazem(conexaoArmazem) {} // Construtor para inicializar a seção com o ID do armazém conectado
+    //Construtores
+    Secao() : conexaoArmazem(-1) {} 
+    Secao(int conexaoArmazem) : conexaoArmazem(conexaoArmazem) {} 
 };
 
 class Armazem {
@@ -19,25 +21,27 @@ class Armazem {
 
         int idArmazem;
         int numSecoes;
-        Secao* secoes; // Array de seções, uma para cada seção do armazém
+        Secao* secoes;
 
     public:
-     // Construtor: Aloca o armazém com um ID e número de seções definidos
+
+    //Construtores e destrutor
     Armazem();
-    Armazem(int id, int numSecoes,int numArmazens, bool** matrizdeAdjacencia);
+    Armazem(int idArmazem, int numSecoes,int numArmazens, bool** matrizdeAdjacencia);
     ~Armazem();
 
+    //Getters do Armazém
+    int getIdArmazem() const;
+    
+    // Métodos para gerenciar pacotes
     void armazenaPacote(int idSecao, Pacote* pacote);
-
     Pacote* retiraPacote(int idSecao);
 
-    bool secaoEstaVazia(int idSecao) const;
-
+    //Metodos para gerenciar seções
     int getnumSecoes() const;
-    // DEPOIS (corrigido)
-    Secao& getSecao(int idSecao); // Retorna uma REFERÊNCIA para a Secao
-    int getIdArmazem() const;
     int getSecaoConexao(int idSecao) const;
+    Secao& getSecao(int idSecao); 
+    bool secaoEstaVazia(int idSecao) const;
     
 };
-#endif // ARMAZEM_HPP
+#endif 
