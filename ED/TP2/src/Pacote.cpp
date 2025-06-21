@@ -58,8 +58,7 @@ void Pacote::setRota(bool** matrizAdj, int numArmazens) {
         int atual = this->armazemDestino;
 
         while (atual != this->armazemOrigem) {
-            this->rota.inserirInicio(atual); // Insere no início para inverter a ordem
-            atual = anterior[atual];
+            this->rota.inserirInicio(atual);
         }
     }
     

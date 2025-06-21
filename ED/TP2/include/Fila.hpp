@@ -32,11 +32,11 @@ Fila<T>::Fila() : lista() {}
 template <typename T>
 Fila<T>::~Fila() {}
 
-//Método de Inserção
+//Insere um elemento na fila
 template <typename T>
 void Fila<T>::enfileirar(T valor) { lista.inserirFim(valor); }
 
-//Método de Remoção
+//Remove o primeiro elemento da fila
 template <typename T>
 T Fila<T>::desenfileirar() { return lista.removerInicio(); }
 
