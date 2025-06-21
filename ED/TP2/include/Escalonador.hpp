@@ -5,19 +5,23 @@
 #include "Evento.hpp"
 
 class Escalonador {
-private:
-    MinHeap<Evento*> filaEventos;
-    int tempoSimulacao;
+    private:
+        MinHeap<Evento*> filaEventos;
+        int tempoSimulacao;
 
-public:
-    Escalonador();
-    ~Escalonador();
+    public:
+        //Construtor e Destrutor
+        Escalonador();
+        ~Escalonador();
 
-    void setTempoSimulacao(int tempo);
-    void agendarEvento(Evento* evento);
-    Evento* proximoEvento();
-    bool temEventos() const;
-    int getTempoAtual() const;
+        //Métodos para checar o estado da simulação
+        int getTempoAtual() const;
+        bool temEventos() const;
+        
+        //Métodos para gerenciar a simulação
+        void setTempoSimulacao(int tempo);
+        void agendarEvento(Evento* evento);
+        Evento* proximoEvento();
 };
 
 #endif // ESCALONADOR_HPP
