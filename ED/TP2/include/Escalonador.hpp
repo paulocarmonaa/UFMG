@@ -24,4 +24,4 @@ class Escalonador {
         Evento* proximoEvento();
 };
 
-#endif // ESCALONADOR_HPP
+#endif
