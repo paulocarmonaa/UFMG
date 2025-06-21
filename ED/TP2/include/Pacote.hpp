@@ -1,39 +1,39 @@
 #ifndef PACOTE_HPP
 #define PACOTE_HPP
 
-#include "ListaEncadeada.hpp" // Supondo que ListaEncadeada.hpp esteja correta
+#include "Fila.hpp" 
 
 class Pacote {
-private:
-    int idPacote;
-    int armazemOrigem;
-    int armazemDestino;
-    
+    private:
+        int idPacote;
+        int armazemOrigem;
+        int armazemDestino;
+        
+        ListaEncadeada<int> rota;
 
-    // Estatísticas de tempo
-    int tempoTotalArmazenado;
-    int tempoTotalTransporte;
+        // Estatísticas de tempo
+        int tempoTotalArmazenado;
+        int tempoTotalTransporte;
+    public:
 
-    ListaEncadeada<int> rota;
-    //int estadoPacote;
+        //Construtores e destrutor
+        Pacote(); 
+        Pacote(int id, int origem, int destino);
+        ~Pacote(); 
+        
+        //Getters
+        int getId() const;
+        int getArmazemDestino() const;
 
-public:
-    Pacote(); // Construtor padrão
-    Pacote(int id, int origem, int destino);
-    
-    // Métodos para gerenciar a rota
-    void setRota(bool** matrizAdj, int numArmazens);
-    int getProximoDestino();
-    void avancarNaRota();
-    bool chegouAoDestinoFinal() const;
+        // Métodos para gerenciar a rota
+        void setRota(bool** matrizAdj, int numArmazens);
+        void avancarNaRota();
+        int getProximoDestino();
+        bool chegouAoDestinoFinal() const;
 
-    // Métodos para estatísticas de tempo (sua sugestão!)
-    void adicionaTempoArmazenado(double tempo);
-    void adicionaTempoTransporte(double tempo);
-
-    // Getters para informações básicas
-    int getId() const;
-    int getArmazemDestino() const;
+        // Métodos para estatísticas de tempo 
+        void adicionaTempoArmazenado(int tempo);
+        void adicionaTempoTransporte(int tempo);
 };
 
 #endif // PACOTE_HPP
