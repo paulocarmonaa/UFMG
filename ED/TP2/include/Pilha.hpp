@@ -2,35 +2,66 @@
 #define PILHA_HPP
 
 #include "ListaEncadeada.hpp"
+#include <stdexcept>
 
-// Implementação de uma Pilha (Stack) genérica, utilizando ListaEncadeada como base.
-// Segue a política LIFO (Last-In, First-Out).
-// Usada nos Armazens para guardar pacotes nas seções.[1]
 template <typename T>
 class Pilha {
 private:
-    ListaEncadeada<T> lista; // A lista encadeada armazena os elementos da pilha.
+    ListaEncadeada<T> lista;
 
 public:
+    // Construtor e destrutor
     Pilha();
     ~Pilha();
 
-    // Empilha um elemento no topo da pilha.
+    // Métodos para empilhar e desempilhar elementos.
     void empilhar(T valor);
-
-    // Remove e retorna o elemento do topo da pilha.
-    // Lança uma exceção se a pilha estiver vazia.
     T desempilhar();
 
-    // Retorna o elemento do topo da pilha sem removê-lo.
-    // Lança uma exceção se a pilha estiver vazia.
+    //Metodos de verificação
     T verTopo() const;
-
-    // Verifica se a pilha está vazia.
     bool estaVazia() const;
-
-    // Retorna o número de elementos na pilha.
     int tamanho() const;
 };
 
-#endif // PILHA_HPP
+//Implementação dos métodos da Pilha
+
+//Construtor
+template <typename T>
+Pilha<T>::Pilha() {} 
+
+//Destrutor
+template <typename T>
+Pilha<T>::~Pilha() {} // Destrutor padrão de ListaEncadeada é chamado, limpando a lista
+
+//Método para empilhar o elemento no topo
+template <typename T>
+void Pilha<T>::empilhar(T valor) { lista.inserirInicio(valor);}
+
+// Método para desempilhar o elemento do topo
+template <typename T>
+T Pilha<T>::desempilhar() {
+    if (estaVazia()) {
+        throw std::runtime_error("Erro: Pilha vazia ao tentar desempilhar.");
+    }
+    return lista.removerInicio();
+}
+
+//Método para verificar elemento do topo sem removê-lo
+template <typename T>
+T Pilha<T>::verTopo() const {
+    if (estaVazia()) {
+        throw std::runtime_error("Erro: Pilha vazia ao tentar ver o topo.");
+    }
+    return lista.obterPrimeiro();
+}
+
+//Método para verificar se a pilha está vazia
+template <typename T>
+bool Pilha<T>::estaVazia() const { return lista.estaVazia();}
+
+// Método para obter o tamanho da pilha
+template <typename T>
+int Pilha<T>::tamanho() const { return lista.getTamanho(); }
+
+#endif
