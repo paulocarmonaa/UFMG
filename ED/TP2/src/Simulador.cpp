@@ -10,8 +10,27 @@
 Simulador::Simulador(Escalonador& escalonador)
     :escalonador(escalonador),Configuracao(),Estatisticas() { }
 
-//Destrutor
-Simulador::~Simulador(){}
+//Destrutor desaloca toda a memória alocada no simulador para as informações do arquivo
+Simulador::~Simulador(){
+
+    //Libera a memória dos pacotes 
+    for (int i = 0; i < this->Configuracao.numPacotes; ++i) {
+        delete this->Configuracao.pacotes[i];
+    }
+    delete[] this->Configuracao.pacotes;
+
+    //Libera a memória dos armazéns 
+    for (int i = 0; i < this->Configuracao.numArmazens; ++i) {
+        delete this->Configuracao.armazens[i];
+    }
+    delete[] this->Configuracao.armazens;
+
+    //Libera a memória da matriz de adjacência 
+    for (int i = 0; i < this->Configuracao.numArmazens; ++i) {
+        delete[] this->Configuracao.matrizAdjacencia[i];
+    }
+    delete[] this->Configuracao.matrizAdjacencia;
+}
 
 //Carrega todas as informações de pacotes e armazens
 //Inicializa os eventos de postagem de pacote e de transporte entre armazens
@@ -36,6 +55,7 @@ void Simulador::carregarConfiguracao(const std::string& arquivoConfig){
             arquivo >> Configuracao.matrizAdjacencia[i][j];
         }
     }
+
 
     //Cria os armazens a partir das informacoes de entrada
     Configuracao.armazens = new Armazem*[Configuracao.numArmazens];
@@ -167,9 +187,9 @@ void Simulador::rodarSimulacao(){
                 }
                 
             }
-        
         }
 
+        delete eventoAtual;
     }
 
 }
