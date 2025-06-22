@@ -3,7 +3,6 @@
 
 #include "Evento.hpp" 
 
-
 template <typename T>
 class MinHeap {
     private:
