@@ -59,6 +59,7 @@ void Pacote::setRota(bool** matrizAdj, int numArmazens) {
 
         while (atual != this->armazemOrigem) {
             this->rota.inserirInicio(atual);
+            atual = anterior[atual];
         }
     }
     
